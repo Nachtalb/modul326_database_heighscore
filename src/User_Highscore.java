@@ -18,11 +18,11 @@ public class User_Highscore {
     public static void main(String[] args) throws Exception {
         try {
             // delete the H2 database named 'test' in the user home directory
-            DeleteDbFiles.execute("~", "test", true);
-            insertWithStatement();
-            DeleteDbFiles.execute("~", "test", true);
-            insertWithPreparedStatement();
-
+            //DeleteDbFiles.execute("~", "test", true);
+            //insertWithStatement();
+            //DeleteDbFiles.execute("~", "test", true);
+            //insertWithPreparedStatement();
+            selectTopTenUser();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -90,9 +90,19 @@ public class User_Highscore {
         Connection connection = getDBConnection();
         Statement stmt = null;
         try {
-
+            connection.setAutoCommit(false);
+            stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("select top 10 FROM Person order by score");
+            System.out.println("H2 Database inserted through Statement");
+            while (rs.next()) {
+                System.out.println("Id "+rs.getInt("id")+" Name "+rs.getString("name"));
+            }
+            stmt.close();
+            connection.commit();
         }catch (Exception e){
             e.printStackTrace();
+        }finally {
+            connection.close();
         }
     }
 
