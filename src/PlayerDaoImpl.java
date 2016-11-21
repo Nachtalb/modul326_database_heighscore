@@ -6,20 +6,45 @@ import java.util.ArrayList;
  */
 public class PlayerDaoImpl implements PlayerDao {
 
-    private final String DB_DRIVER = "org.h2.Driver";
-    private final String DB_NAME = "bomberman";
-    private final String DB_LOCATION = "./";
-    private final String DB_CONNECTION = "jdbc:h2:" + DB_LOCATION + DB_NAME;
-    private final String DB_USER = "bomberman";
-    private final String DB_PASSWORD = "";
+    private static final String DB_DRIVER = "org.h2.Driver";
+    private static final String DB_NAME = "bombermann";
+    private static final String DB_LOCATION = "./";
+    private static final String DB_CONNECTION = "jdbc:h2:" + DB_LOCATION + DB_NAME;
+    private static final String DB_USER = "bomberman";
+    private static final String DB_PASSWORD = "";
 
-    public PlayerDaoImpl() {
+    private static Connection getDBConnection() {
+        Connection dbConnection = null;
+
+        try {
+
+            Class.forName(DB_DRIVER);
+
+        } catch (ClassNotFoundException e) {
+
+            System.out.println(e.getMessage());
+
+        }
+
+        try {
+
+            dbConnection = DriverManager.getConnection(DB_CONNECTION, DB_USER,
+                    DB_PASSWORD);
+            return dbConnection;
+
+        } catch (SQLException e) {
+
+            System.out.println(e.getMessage());
+
+        }
+
+        return dbConnection;
+
     }
 
     @Override
     public ArrayList<Player> getTopTenPlayer() throws SQLException {
-        Connection con = DriverManager.getConnection(DB_CONNECTION, DB_USER,
-                DB_PASSWORD);
+        Connection con = getDBConnection();
 
         Statement stmt = null;
         ArrayList<Player> players = new ArrayList<Player>();
@@ -45,8 +70,7 @@ public class PlayerDaoImpl implements PlayerDao {
 
     @Override
     public Player addPlayer(String name) throws SQLException {
-        Connection con = DriverManager.getConnection(DB_CONNECTION, DB_USER,
-                DB_PASSWORD);
+        Connection con = getDBConnection();
 
 
         PreparedStatement stmt = null;
@@ -80,22 +104,15 @@ public class PlayerDaoImpl implements PlayerDao {
 
     @Override
     public Player getPlayer(String name) throws SQLException {
-        Connection con = DriverManager.getConnection(DB_CONNECTION, DB_USER,
-                DB_PASSWORD);
-
+        Connection con = getDBConnection();
 
         Statement stmt = null;
         Player player = null;
-
-        String query = "SELECT * FROM player WHERE name=" + name;
         try {
             con.setAutoCommit(false);
-
             stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM player WHERE name='" + name + "';");
 
-            ResultSet rs = stmt.executeQuery(query);
-
-            System.out.println("test");
             if (rs.isBeforeFirst()) {
                 while (rs.next()) {
                     player = new Player(rs.getString("name"), rs.getInt("score"));
@@ -103,10 +120,7 @@ public class PlayerDaoImpl implements PlayerDao {
             }
 
             stmt.close();
-
             con.commit();
-        } catch (SQLException e) {
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -118,8 +132,7 @@ public class PlayerDaoImpl implements PlayerDao {
 
     @Override
     public Player updatePlayer(String name, int score) throws SQLException {
-        Connection con = DriverManager.getConnection(DB_CONNECTION, DB_USER,
-                DB_PASSWORD);
+        Connection con = getDBConnection();
 
         PreparedStatement stmt = null;
 
@@ -151,8 +164,7 @@ public class PlayerDaoImpl implements PlayerDao {
 
     @Override
     public void deletePlayer(String name) throws SQLException {
-        Connection con = DriverManager.getConnection(DB_CONNECTION, DB_USER,
-                DB_PASSWORD);
+        Connection con = getDBConnection();
 
         PreparedStatement stmt = null;
 
@@ -178,8 +190,7 @@ public class PlayerDaoImpl implements PlayerDao {
     }
 
     public void createStructure() throws SQLException {
-        Connection con = DriverManager.getConnection(DB_CONNECTION, DB_USER,
-                DB_PASSWORD);
+        Connection con = getDBConnection();
 
         PreparedStatement stmt = null;
         Player player = null;
