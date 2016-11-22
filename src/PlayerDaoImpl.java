@@ -6,40 +6,44 @@ import java.util.ArrayList;
  */
 public class PlayerDaoImpl implements PlayerDao {
 
-    private static final String DB_DRIVER = "org.h2.Driver";
-    private static final String DB_NAME = "bombermann";
-    private static final String DB_LOCATION = "./";
-    private static final String DB_CONNECTION = "jdbc:h2:" + DB_LOCATION + DB_NAME;
-    private static final String DB_USER = "bomberman";
-    private static final String DB_PASSWORD = "";
+    private final String DB_DRIVER = "org.h2.Driver";
+    private final String DB_NAME_DEFAULT = "bomberman";
+    private final String DB_LOCATION_DEFAULT = "./";
+    private final String DB_CONNECTION;
+    private final String DB_USER = "bomberman";
+    private final String DB_PASSWORD = "";
 
-    private static Connection getDBConnection() {
+
+    PlayerDaoImpl(String DB_NAME, String DB_LOCATION) {
+
+        if (DB_NAME == null) {
+            DB_NAME = DB_NAME_DEFAULT;
+        }
+        if (DB_LOCATION == null) {
+            DB_LOCATION = DB_LOCATION_DEFAULT;
+        }
+
+        DB_CONNECTION = "jdbc:h2:" + DB_LOCATION + DB_NAME;
+    }
+
+    private Connection getDBConnection() {
         Connection dbConnection = null;
 
         try {
-
             Class.forName(DB_DRIVER);
-
         } catch (ClassNotFoundException e) {
-
             System.out.println(e.getMessage());
-
         }
 
         try {
-
             dbConnection = DriverManager.getConnection(DB_CONNECTION, DB_USER,
                     DB_PASSWORD);
             return dbConnection;
-
         } catch (SQLException e) {
-
             System.out.println(e.getMessage());
-
         }
 
         return dbConnection;
-
     }
 
     @Override

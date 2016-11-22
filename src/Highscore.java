@@ -2,14 +2,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 
-public class Highscore {
+public class Highscore implements HighscoreIntf {
 
     private static Highscore instance = null;
 
     private PlayerDaoImpl playerDaoImpl;
 
     private Highscore() {
-        playerDaoImpl = new PlayerDaoImpl();
+        playerDaoImpl = new PlayerDaoImpl("bomberman", "./");
     }
 
     /**
@@ -17,7 +17,7 @@ public class Highscore {
      *
      * @return the Highscore object
      */
-    public static Highscore getInsctance() {
+    static Highscore getInsctance() {
         if (instance == null)
             instance = new Highscore();
         return instance;
@@ -66,6 +66,7 @@ public class Highscore {
     public boolean playerExists(String name) throws SQLException {
         return (playerDaoImpl.getPlayer(name) != null);
     }
+
     /**
      * Gives you a player if he exists
      *
@@ -82,7 +83,7 @@ public class Highscore {
      *
      * @throws SQLException if there is an error with the database
      */
-    public ArrayList<Player> selectTopTenUser() throws SQLException {
+    public ArrayList<Player> getTopTenPlayer() throws SQLException {
         return playerDaoImpl.getTopTenPlayer();
     }
 
