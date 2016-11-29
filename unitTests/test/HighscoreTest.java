@@ -1,10 +1,9 @@
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by nicko on 21.11.2016.
@@ -27,8 +26,8 @@ public class HighscoreTest {
         System.out.println("testing: addPlayer()");
         Player player = highscore.addPlayer("Joe");
 
-        assertNotNull(player);
-        assertEquals(new Player("Joe", 0).getName(), player.getName());
+        Assert.assertNotNull(player);
+        Assert.assertEquals(new Player("Joe", 0).getName(), player.getName());
     }
 
 
@@ -38,13 +37,13 @@ public class HighscoreTest {
         Player playerBefore = highscore.addPlayer("Malte");
         Player playerAfter = highscore.addScore("Malte", 5);
 
-        assertNotNull(playerBefore);
-        assertNotNull(playerAfter);
+        Assert.assertNotNull(playerBefore);
+        Assert.assertNotNull(playerAfter);
 
-        assertTrue(playerAfter.getScore() > playerBefore.getScore());
-        assertEquals(playerBefore.getName(), playerAfter.getName());
-        assertEquals(0, playerBefore.getScore());
-        assertEquals(5, playerAfter.getScore());
+        Assert.assertTrue(playerAfter.getScore() > playerBefore.getScore());
+        Assert.assertEquals(playerBefore.getName(), playerAfter.getName());
+        Assert.assertEquals(0, playerBefore.getScore());
+        Assert.assertEquals(5, playerAfter.getScore());
     }
 
     @Test
@@ -52,13 +51,13 @@ public class HighscoreTest {
         System.out.println("testing: playerExist()");
         Player player = highscore.addPlayer("Foo");
 
-        assertNotNull(player);
+        Assert.assertNotNull(player);
 
         Boolean result = highscore.playerExists("Foo");
         Boolean result2 = highscore.playerExists("Bar");
 
-        assertTrue(result);
-        assertFalse(result2);
+        Assert.assertTrue(result);
+        Assert.assertFalse(result2);
     }
 
     @Test
@@ -68,9 +67,9 @@ public class HighscoreTest {
         Player jaden = highscore.addPlayer("Jaden");
         Player will = highscore.addPlayer("Will");
 
-        assertNotNull(smith);
-        assertNotNull(jaden);
-        assertNotNull(will);
+        Assert.assertNotNull(smith);
+        Assert.assertNotNull(jaden);
+        Assert.assertNotNull(will);
 
         highscore.addScore("Smith", 100);
         highscore.addScore("Jaden", 200);
@@ -79,7 +78,7 @@ public class HighscoreTest {
         ArrayList<Player> players = highscore.getTopTenPlayer();
 
         for (int i = 0; i < players.size(); i++) {
-            assertEquals(i * 100 + 100, players.get(i).getScore());
+            Assert.assertEquals(i * 100 + 100, players.get(i).getScore());
         }
     }
 
