@@ -8,8 +8,8 @@ public class Highscore implements HighscoreIntf {
 
     private PlayerDaoImpl playerDaoImpl;
 
-    private Highscore() {
-        playerDaoImpl = new PlayerDaoImpl("bomberman", "./");
+    private Highscore(String db_name) {
+        playerDaoImpl = new PlayerDaoImpl(db_name, "./");
     }
 
     /**
@@ -17,9 +17,12 @@ public class Highscore implements HighscoreIntf {
      *
      * @return the Highscore object
      */
-    static Highscore getInsctance() {
-        if (instance == null)
-            instance = new Highscore();
+    static Highscore getInsctance(String db_name) {
+        if (instance == null) {
+            if (db_name == null)
+                db_name = "bomberman";
+            instance = new Highscore(db_name);
+        }
         return instance;
     }
 
@@ -86,5 +89,4 @@ public class Highscore implements HighscoreIntf {
     public ArrayList<Player> getTopTenPlayer() throws SQLException {
         return playerDaoImpl.getTopTenPlayer();
     }
-
 }

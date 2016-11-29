@@ -55,20 +55,21 @@ public class PlayerDaoImpl implements PlayerDao {
         try {
             con.setAutoCommit(false);
             stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM player ORDER BY score DESC LIMIT 10");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM player ORDER BY score ASC LIMIT 10");
 
-            while (rs.next()) {
-                players.add(new Player(rs.getString("name"), rs.getInt("score")));
+            if (rs.isBeforeFirst()) {
+                while (rs.next()) {
+                    players.add(new Player(rs.getString("name"), rs.getInt("score")));
+                }
             }
 
             stmt.close();
             con.commit();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            con.close();
-            return players;
         }
+        con.close();
+        return players;
 
     }
 
@@ -95,15 +96,11 @@ public class PlayerDaoImpl implements PlayerDao {
             con.commit();
 
             player = new Player(name, 0);
-        } catch (SQLException e) {
-
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            con.close();
-            return player;
         }
-
+        con.close();
+        return player;
     }
 
     @Override
@@ -127,23 +124,22 @@ public class PlayerDaoImpl implements PlayerDao {
             con.commit();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            con.close();
-            return player;
         }
+        con.close();
+        return player;
 
     }
 
     @Override
     public Player updatePlayer(String name, int score) throws SQLException {
         Connection con = getDBConnection();
+        Player player = null;
 
         PreparedStatement stmt = null;
 
         String query = "UPDATE player SET name=?, score=? WHERE name=? ";
         try {
             con.setAutoCommit(false);
-
             stmt = con.prepareStatement(query);
 
             stmt.setString(1, name);
@@ -155,15 +151,13 @@ public class PlayerDaoImpl implements PlayerDao {
 
             con.commit();
 
-        } catch (SQLException e) {
+            player = getPlayer(name);
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            con.close();
-            return null;
         }
-
+        con.close();
+        return player;
     }
 
     @Override
@@ -184,39 +178,38 @@ public class PlayerDaoImpl implements PlayerDao {
             stmt.close();
 
             con.commit();
-        } catch (SQLException e) {
-
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            con.close();
         }
+        con.close();
     }
 
-    public void createStructure() throws SQLException {
+    public void recreateStructure() throws SQLException {
         Connection con = getDBConnection();
 
-        PreparedStatement stmt = null;
-        Player player = null;
+        Statement stmtDrop = null;
+        Statement stmtCreate = null;
 
-        String query = "CREATE TABLE player (name VARCHAR(32), score INT );";
+        String queryDrop = "DROP TABLE IF EXISTS player;";
+        String queryCreate = "CREATE TABLE player (name VARCHAR(32), score INT );";
         try {
             con.setAutoCommit(false);
 
-            stmt = con.prepareStatement(query);
+            stmtCreate = con.createStatement();
+            stmtDrop = con.createStatement();
 
-            stmt.executeUpdate();
-            stmt.close();
+            stmtDrop.execute(queryDrop);
+            stmtCreate.execute(queryCreate);
+
+            stmtCreate.close();
+            stmtDrop.close();
 
             con.commit();
 
-        } catch (SQLException e) {
-
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            con.close();
         }
+        con.close();
 
     }
 }
