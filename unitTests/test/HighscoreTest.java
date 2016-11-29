@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class HighscoreTest {
 
-    private Highscore highscore;
+    private HighscoreIntf highscore;
 
     @Before
     public void setUp() throws SQLException {
