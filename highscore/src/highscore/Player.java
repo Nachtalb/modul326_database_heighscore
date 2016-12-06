@@ -1,3 +1,5 @@
+package highscore;
+
 /**
  * Created by nicko on 08.11.2016.
  */

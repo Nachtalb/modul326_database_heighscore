@@ -1,3 +1,7 @@
+import highscore.Highscore;
+import highscore.HighscoreIntf;
+import highscore.Player;
+import highscore.PlayerDaoImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

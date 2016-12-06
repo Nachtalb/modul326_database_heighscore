@@ -1,3 +1,5 @@
+package highscore;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -13,9 +15,9 @@ public class Highscore implements HighscoreIntf {
     }
 
     /**
-     * Returns the Highscore object
+     * Returns the highscore.Highscore object
      *
-     * @return the Highscore object
+     * @return the highscore.Highscore object
      */
     static Highscore getInsctance(String db_name) {
         if (instance == null) {
@@ -31,7 +33,7 @@ public class Highscore implements HighscoreIntf {
      *
      * @param name  of the player
      * @param score which will be added to the player
-     * @return Player which was updated
+     * @return highscore.Player which was updated
      * @throws SQLException if there is an error with the database
      */
     public Player addScore(String name, int score) throws SQLException {
@@ -48,7 +50,7 @@ public class Highscore implements HighscoreIntf {
      * Adds a new player
      *
      * @param name of the new player
-     * @return Player which was created
+     * @return highscore.Player which was created
      * @throws SQLException if there is an error with the database
      */
     public Player addPlayer(String name) throws SQLException {
